@@ -1,0 +1,316 @@
+<!DOCTYPE html><html lang="zh-TW" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Python 3.10 | Match Statement - 更靈活的 switch | Breeze。夏風與夢</title><meta name="author" content="夏乃凜"><meta name="copyright" content="夏乃凜"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="概述在我當初開始學 Python 時，發現沒有 switch 可用，令我感到有些驚訝，還好從 Python 3.10 開始， Python 有了自己的 switch —— Structural Pattern Matching。 所以什麼是 Structural Pattern Matching ? 與 C++ 的 switch 相比，我覺得它更類似於 C# 的 Pattern Matching。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python 3.10 | Match Statement - 更靈活的 switch">
+<meta property="og:url" content="https://vhrqo.github.io/posts/54dc861e6176/index.html">
+<meta property="og:site_name" content="Breeze。夏風與夢">
+<meta property="og:description" content="概述在我當初開始學 Python 時，發現沒有 switch 可用，令我感到有些驚訝，還好從 Python 3.10 開始， Python 有了自己的 switch —— Structural Pattern Matching。 所以什麼是 Structural Pattern Matching ? 與 C++ 的 switch 相比，我覺得它更類似於 C# 的 Pattern Matching。">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://images.unsplash.com/photo-1559622214-f8a9850965bb?q=80&w=3294&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D">
+<meta property="article:published_time" content="2025-03-04T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-03-05T16:19:56.917Z">
+<meta property="article:author" content="夏乃凜">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="Python 3.10">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://images.unsplash.com/photo-1559622214-f8a9850965bb?q=80&w=3294&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Python 3.10 | Match Statement - 更靈活的 switch",
+  "url": "https://vhrqo.github.io/posts/54dc861e6176/",
+  "image": "https://images.unsplash.com/photo-1559622214-f8a9850965bb?q=80&w=3294&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "datePublished": "2025-03-04T16:00:00.000Z",
+  "dateModified": "2025-03-05T16:19:56.917Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "夏乃凜",
+      "url": "https://vhrqo.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://vhrqo.github.io/posts/54dc861e6176/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const mediaQueryDark = window.matchMedia('(prefers-color-scheme: dark)')
+          const mediaQueryLight = window.matchMedia('(prefers-color-scheme: light)')
+
+          if (theme === undefined) {
+            if (mediaQueryLight.matches) activateLightMode()
+            else if (mediaQueryDark.matches) activateDarkMode()
+            else {
+              const hour = new Date().getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            mediaQueryDark.addEventListener('change', () => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else {
+            theme === 'light' ? activateLightMode() : activateDarkMode()
+          }
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '複製成功',
+    error: '複製失敗',
+    noSupport: '瀏覽器不支援'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '剛剛',
+    min: '分鐘前',
+    hour: '小時前',
+    day: '天前',
+    month: '個月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '載入更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: true,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Python 3.10 | Match Statement - 更靈活的 switch',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://avatars.githubusercontent.com/u/120627599" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">1</div></a><a href="/tags/"><div class="headline">標籤</div><div class="length-num">2</div></a><a href="/categories/"><div class="headline">分類</div><div class="length-num">1</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa-solid fa-house"></i><span> 首頁</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa-solid fa-box-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa-solid fa-folder-open"></i><span> 分類</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa-solid fa-tags"></i><span> 標籤</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://images.unsplash.com/photo-1559622214-f8a9850965bb?q=80&amp;w=3294&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Breeze。夏風與夢</span></a><a class="nav-page-title" href="/"><span class="site-name">Python 3.10 | Match Statement - 更靈活的 switch</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa-solid fa-house"></i><span> 首頁</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa-solid fa-box-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa-solid fa-folder-open"></i><span> 分類</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa-solid fa-tags"></i><span> 標籤</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Python 3.10 | Match Statement - 更靈活的 switch</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">發表於</span><time class="post-meta-date-created" datetime="2025-03-04T16:00:00.000Z" title="發表於 2025-03-05 00:00:00">2025-03-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新於</span><time class="post-meta-date-updated" datetime="2025-03-05T16:19:56.917Z" title="更新於 2025-03-06 00:19:56">2025-03-06</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Python-%C2%B7-%E5%9F%BA%E7%A4%8E/">Python · 基礎</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">總字數:</span><span class="word-count">1.8k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">閱讀時間:</span><span>7分鐘</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">瀏覽量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>在我當初開始學 Python 時，發現沒有 switch 可用，令我感到有些驚訝，<br>還好從 Python 3.10 開始， Python 有了自己的 switch —— <a target="_blank" rel="noopener" href="https://peps.python.org/pep-0636/">Structural Pattern Matching</a>。</p>
+<p>所以什麼是 Structural Pattern Matching ? 與 C++ 的 switch 相比，我覺得它更類似於 C# 的 Pattern Matching。<br>舉個簡單的例子:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">is_perform = <span class="literal">False</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">match</span> (<span class="string">&quot;anon&quot;</span>, <span class="string">&quot;soyorin&quot;</span>):</span><br><span class="line">    <span class="comment"># Mismatch</span></span><br><span class="line">    <span class="keyword">case</span> <span class="string">&#x27;tomorin&#x27;</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;組一輩子樂團&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Mismatch: soyorin != rana</span></span><br><span class="line">    <span class="keyword">case</span> (<span class="string">&quot;anon&quot;</span>, <span class="string">&quot;rana&quot;</span>):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;有趣的女人&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Successful match, but guard fails</span></span><br><span class="line">    <span class="keyword">case</span>  (<span class="string">&quot;anon&quot;</span>, <span class="string">&quot;soyorin&quot;</span>) <span class="keyword">if</span> is_perform:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;為什麼要演奏春日影!&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Matches and binds y to &quot;soyorin&quot;</span></span><br><span class="line">    <span class="keyword">case</span> (<span class="string">&quot;anon&quot;</span>, y):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&#x27;愛音,<span class="subst">&#123;y&#125;</span> 強到靠北&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Pattern not attempted</span></span><br><span class="line">    <span class="keyword">case</span> _:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;我還是會繼續下去&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 愛音,soyorin 強到靠北</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>📌 Note<br>與 <a target="_blank" rel="noopener" href="https://www.learncpp.com/cpp-tutorial/switch-fallthrough-and-scoping/">C++</a> 不同，Python 的 <code>match</code> <strong>沒有</strong> <a target="_blank" rel="noopener" href="https://peps.python.org/pep-0636/#matching-multiple-patterns"><strong>fallthrough</strong></a>。<br>所以一個 <code>case</code> 完成就會離開 <code>match</code>，而不會繼續執行下一個 <code>case</code>。</p>
+</blockquote>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><a target="_blank" rel="noopener" href="https://docs.python.org/3/reference/compound_stmts.html#the-match-statement">文件</a>中把 <code>match</code> 後的部分 <code>(&quot;anon&quot;, &quot;soyorin&quot;):</code>，稱為 <code>subject_expr</code>，<br>為了方便理解，我們叫他 <code>match value</code>。</p>
+<h1 id="Guards"><a href="#Guards" class="headerlink" title="Guards"></a>Guards</h1><blockquote>
+<p><code>case &lt;pattern&gt; if &lt;expression&gt;:</code></p>
+</blockquote>
+<p>如果我們在 pattern 成功 match 後，想進一步檢查，可以在 pattern 後面加上 <code>if</code> ，<br>也就是範例中的 <code>case  (&quot;anon&quot;, &quot;soyorin&quot;) if is_perform:</code>，<br>這種用法稱為 <strong>Guard</strong> 。</p>
+<p>執行流程大致為</p>
+<ol>
+<li>Pattern 成功 match，執行 Guard</li>
+<li>Pattern Mismatch，不執行 Guard </li>
+<li>Guard 結果為 <code>True</code> → 該 <code>case</code> 執行</li>
+<li>Guard 結果為 <code>False</code> → 跳過該 <code>case</code>，繼續檢查下一個 <code>case</code></li>
+</ol>
+<h1 id="Irrefutable-Case-Blocks"><a href="#Irrefutable-Case-Blocks" class="headerlink" title="Irrefutable Case Blocks"></a>Irrefutable Case Blocks</h1><p>指的是<strong>一定</strong> match 的情況，類似於 C++ 的 <code>default</code>，<br>但只能出現在 <strong>最後一個</strong> <code>case</code>，且整個 match 只能有 <strong>一個</strong> 這樣的 <code>case</code>。<br>至於甚麼 pattern 符合?<br>可以參考 <a target="_blank" rel="noopener" href="https://docs.python.org/3/reference/compound_stmts.html#irrefutable-case-blocks">https://docs.python.org/3/reference/compound_stmts.html#irrefutable-case-blocks</a></p>
+<p>舉例來說:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">match</span> <span class="number">2</span>:</span><br><span class="line">    <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;value is 1&quot;</span>)</span><br><span class="line">    <span class="keyword">case</span> x:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;Irrefutable Case Blocks&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># Irrefutable Case Blocks</span></span><br></pre></td></tr></table></figure>
+
+
+<h1 id="Patterns"><a href="#Patterns" class="headerlink" title="Patterns"></a>Patterns</h1><h2 id="OR-Patterns"><a href="#OR-Patterns" class="headerlink" title="OR Patterns"></a>OR Patterns</h2><p>就如同字面含意，就是個 <code>or</code>，<br>pattern 會逐一嘗試直到其中一個成功為止。</p>
+<p>舉個簡單例子:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">match</span> <span class="number">1</span>:</span><br><span class="line">    <span class="keyword">case</span> <span class="number">1</span> | <span class="number">2</span> | <span class="number">3</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;value is 1 or 2 or 3&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># value is 1 or 2 or 3</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="AS-Patterns"><a href="#AS-Patterns" class="headerlink" title="AS Patterns"></a>AS Patterns</h2><p>前面 <code>or</code> 用的很開心，那我們如何取的原本的 value 呢?<br>此時我們可以用 <code>as</code> 來取得前面 match 到的值，<br>也就是<code>case &lt;pattern&gt; as &lt;name&gt;:</code>，在 pattern 成功的情況下，<br>match value 會 bind 到 name 上，<code>name = &lt;match value&gt;</code>。</p>
+<p>接續前面的例子</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">match</span> <span class="number">1</span>:</span><br><span class="line">    <span class="keyword">case</span> <span class="number">1</span> | <span class="number">2</span> | <span class="number">3</span> <span class="keyword">as</span> x:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;value is <span class="subst">&#123;x&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># value is 1</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Literal-Patterns"><a href="#Literal-Patterns" class="headerlink" title="Literal Patterns"></a>Literal Patterns</h2><p>前面我們已經用了不少，用來比對 Python 中的 <a target="_blank" rel="noopener" href="https://docs.python.org/3/reference/lexical_analysis.html#literals">Literals</a>，<br>如<code>int</code>、<code>string</code>、<code>None</code>、<code>bool</code>等等，</p>
+<p>簡單來說，如果 <code>if &lt;match value&gt; == &lt;Literal&gt;</code> 就會比對成功，<br>若是遇到 Singletons ，如<code>None</code>, <code>True</code> ,<code>False</code> 則會透過 <code>is</code> 來比對</p>
+<h2 id="Capture-Patterns"><a href="#Capture-Patterns" class="headerlink" title="Capture Patterns"></a>Capture Patterns</h2><p>用來將比對的值 bind 到變數上，</p>
+<p>在 pattern 中，name 只能被 bind 一次</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">match</span> (<span class="number">1</span>, <span class="number">1</span>):</span><br><span class="line">    <span class="comment"># SyntaxError</span></span><br><span class="line">    <span class="keyword">case</span> x, x:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Matched: <span class="subst">&#123;x&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#     case x, x:</span></span><br><span class="line"><span class="comment">#             ^</span></span><br><span class="line"><span class="comment"># SyntaxError: multiple assignments to name &#x27;x&#x27; in pattern</span></span><br></pre></td></tr></table></figure>
+
+<p>在下面例子中，在成功 match 的同時，<code>&quot;soyorin&quot;</code> 會 bind 到變數 <code>y</code> 上</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">match</span> (<span class="string">&quot;anon&quot;</span>, <span class="string">&quot;soyorin&quot;</span>):</span><br><span class="line">    <span class="comment"># Matches and binds y to &quot;soyorin&quot;</span></span><br><span class="line">    <span class="keyword">case</span> (<span class="string">&quot;anon&quot;</span>, y):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&#x27;愛音,<span class="subst">&#123;y&#125;</span> 強到靠北&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 愛音,soyorin 強到靠北</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Wildcard-Patterns"><a href="#Wildcard-Patterns" class="headerlink" title="Wildcard Patterns"></a>Wildcard Patterns</h2><p><code>_</code>，用來比對任意值，基本上就是當 <code>default</code> 來用。</p>
+<p>比如</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">match</span> (<span class="string">&quot;Raana&quot;</span>, <span class="string">&quot;soyorin&quot;</span>):</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Matches and binds y to &quot;soyorin&quot;</span></span><br><span class="line">    <span class="keyword">case</span> (<span class="string">&quot;anon&quot;</span>, y):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&#x27;愛音,<span class="subst">&#123;y&#125;</span> 強到靠北&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Pattern not attempted</span></span><br><span class="line">    <span class="keyword">case</span> _:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;我還是會繼續下去&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 我還是會繼續下去</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Value-Patterns"><a href="#Value-Patterns" class="headerlink" title="Value Patterns"></a>Value Patterns</h2><p>Value Pattern，是指可以透過 <a target="_blank" rel="noopener" href="https://docs.python.org/3/reference/executionmodel.html#resolve-names">name resolution</a>，<br>也就是透過 <code>.</code> 存取的變數，例如 <code>enum</code>、<code>math.pi</code> 等。<br>藉由 <code>==</code> 來比對，<code>&lt;match value&gt; == &lt;NAME1.NAME2&gt;</code>。 </p>
+<p>例子</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> enum <span class="keyword">import</span> Enum</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Color</span>(<span class="title class_ inherited__">Enum</span>):</span><br><span class="line">    RED = <span class="number">1</span></span><br><span class="line">    GREEN = <span class="number">2</span></span><br><span class="line">    BLUE = <span class="number">3</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">match</span> Color.RED:</span><br><span class="line">    <span class="keyword">case</span> Color.RED:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;RED&quot;</span>)</span><br><span class="line">    <span class="keyword">case</span> Color.GREEN:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;GREEN&quot;</span>)</span><br><span class="line">    <span class="keyword">case</span> Color.BLUE:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;BLUE&quot;</span>)</span><br><span class="line">    <span class="keyword">case</span> _:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;unknown&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># RED</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Group-Patterns"><a href="#Group-Patterns" class="headerlink" title="Group Patterns"></a>Group Patterns</h2><p>老實說，我覺得這不算 pattern，就是告訴你可以加 <code>()</code> 來加強可讀性</p>
+<p>比如前面的例子</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">match</span> <span class="number">1</span>:</span><br><span class="line">    <span class="comment"># case 1 | 2 | 3 as x:</span></span><br><span class="line">    <span class="keyword">case</span> (<span class="number">1</span> | <span class="number">2</span> | <span class="number">3</span>) <span class="keyword">as</span> x:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;value is <span class="subst">&#123;x&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># value is 1</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Sequence-Patterns"><a href="#Sequence-Patterns" class="headerlink" title="Sequence Patterns"></a>Sequence Patterns</h2><p>用來比對 <a target="_blank" rel="noopener" href="https://docs.python.org/3/reference/compound_stmts.html#id21">“Sequence”</a>，如 <code>List</code> 和 <code>Tuple</code> 等。<br>不過，<code>str</code>、<code>bytes</code>、<code>bytearray</code> 並不會被當作 Sequence Patterns。</p>
+<blockquote>
+<p>📌 Note</p>
+<ul>
+<li>Python 不區分 <code>(...)</code> 和 <code>[...]</code>，兩者作用相同。</li>
+<li>另需注意的是 <code>(3 | 4)</code> 會是 group pattern，但 <code>[3 | 4]</code> 依舊是 sequence pattern。</li>
+</ul>
+</blockquote>
+<p>舉體的比對方式大致是</p>
+<ul>
+<li>固定長度<ol>
+<li>Match value 是 Sequence </li>
+<li><code>len(value) == len(patterns)</code></li>
+<li>從左到右依序比對</li>
+</ol>
+</li>
+<li>可變長度 (如<code>[first, *middle, last]</code>)<ol>
+<li>Match value 是 Sequence </li>
+<li>Sequence 長度小於扣除非 <code>*</code>(star pattern) 的數量 → 比對失敗</li>
+<li>比對前面非 <code>*</code>(star pattern) 的部分(如同固定長度，也就是 first 部分)</li>
+<li>如果前面成功，扣除 last 部分後，收集剩餘元素(變成<code>list</code>，對應 <code>*middle</code> )</li>
+<li>最後比對剩餘部分，也就是 last (如同固定長度)</li>
+</ol>
+</li>
+</ul>
+<p>看幾個例子可能比較清楚</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># fixed-length</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">match</span> [<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>]:</span><br><span class="line">    <span class="comment"># note that this match can also bind names</span></span><br><span class="line">    <span class="keyword">case</span> [x, y, z]:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;x=<span class="subst">&#123;x&#125;</span>, y=<span class="subst">&#123;y&#125;</span>, z=<span class="subst">&#123;z&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># x=10, y=20, z=30</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># variable-length</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">match</span> [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]:</span><br><span class="line">    <span class="keyword">case</span> [first, *middle, last]:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;first=<span class="subst">&#123;first&#125;</span>, middle=<span class="subst">&#123;middle&#125;</span>, last=<span class="subst">&#123;last&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># first=1, middle=[2, 3, 4], last=5</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Mapping-Patterns"><a href="#Mapping-Patterns" class="headerlink" title="Mapping Patterns"></a>Mapping Patterns</h2><p>用來比對 <a target="_blank" rel="noopener" href="https://docs.python.org/3/reference/compound_stmts.html#id22">“mapping”</a>，最常用的就是 <code>dict</code></p>
+<p>與前面類似，我們可以把 <code>**</code>(double_star_pattern) 放在最後，收集剩餘元素，<br>另外不可以有重複的 <code>key</code>，否則會 <code>SyntaxError</code></p>
+<p>舉體的比對流程</p>
+<ol>
+<li>Match value 是 mapping</li>
+<li>pattern 的每個 key 有存在於 Match value</li>
+<li>key 對應的 value 與 pattern 相同</li>
+</ol>
+<p>舉個例子</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">match</span> &#123;<span class="string">&quot;name&quot;</span>: <span class="string">&quot;Bob&quot;</span>, <span class="string">&quot;age&quot;</span>: <span class="number">30</span>, <span class="string">&quot;city&quot;</span>: <span class="string">&quot;NY&quot;</span>&#125;:</span><br><span class="line">    <span class="keyword">case</span> &#123;<span class="string">&quot;name&quot;</span>: n, <span class="string">&quot;age&quot;</span>: a&#125;:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;name=<span class="subst">&#123;n&#125;</span>, age=<span class="subst">&#123;a&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># name=Bob, age=30</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Class-Patterns"><a href="#Class-Patterns" class="headerlink" title="Class Patterns"></a>Class Patterns</h2><p>用於比對 <code>class</code>，但其比對流程相對較複雜。<br>和 function arguments 一樣，分為 <strong>positional arguments</strong> 和 <strong>keyword arguments</strong> 兩種形式。</p>
+<p>比對流程</p>
+<ol>
+<li>Match value 是否是 <a target="_blank" rel="noopener" href="https://docs.python.org/3/library/functions.html#type">builtin type</a></li>
+<li>檢查 Match value 是不是 Patterns 的 instance ，透過<a target="_blank" rel="noopener" href="https://docs.python.org/3/library/functions.html#isinstance"><code>isinstance()</code></a>進行檢查。</li>
+<li>檢查 Class Patterns 是否含有 arguments ，沒有就直接比對成功</li>
+</ol>
+<p>如果有則分成 keyword 或 positional argument 兩種情形</p>
+<ul>
+<li><strong>只有</strong> Keyword arguments：  <ol>
+<li>檢查 attribute 是否存在於 Match value  </li>
+<li>檢查 attribute value 是否和 Pattern 相同  </li>
+<li>成功則往下個 keyword</li>
+</ol>
+</li>
+<li><strong>如果有</strong> Positional arguments：  <ol>
+<li>藉由 Match value 的 <a target="_blank" rel="noopener" href="https://docs.python.org/3/reference/datamodel.html#object.__match_args__"><code>__match_args__</code></a>  attribute ，將 Positional arguments 轉換為 Keyword arguments</li>
+</ol>
+</li>
+</ul>
+<blockquote>
+<p>📌 Note      </p>
+<ul>
+<li><code>object.__match_args__</code>，若沒有定義，預設是一個 empty tuple <code>()</code></li>
+<li>部分 <a target="_blank" rel="noopener" href="https://docs.python.org/3/reference/compound_stmts.html#class-patterns">built-in types</a>（如 <code>bool</code>、<code>int</code>、<code>list</code>、<code>str</code> 等），是比對接收 positional argument 後的<strong>整個 object</strong>。</li>
+</ul>
+</blockquote>
+<p>例子</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Keyword argument</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Point</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, x, y</span>):</span><br><span class="line">        <span class="variable language_">self</span>.x = x</span><br><span class="line">        <span class="variable language_">self</span>.y = y</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">match</span> Point(<span class="number">1</span>, <span class="number">2</span>):</span><br><span class="line">    <span class="keyword">case</span> Point(x=<span class="number">1</span>, y=y_value):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Matched! y=<span class="subst">&#123;y_value&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># Matched! y=2</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># positional argument</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Point</span>:</span><br><span class="line">    <span class="comment"># assigned a tuple of strings</span></span><br><span class="line">    __match_args__ = (<span class="string">&quot;x&quot;</span>, <span class="string">&quot;y&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, x, y</span>):</span><br><span class="line">        <span class="variable language_">self</span>.x = x</span><br><span class="line">        <span class="variable language_">self</span>.y = y</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">match</span> Point(<span class="number">1</span>, <span class="number">2</span>):</span><br><span class="line">    <span class="comment"># converted to keyword patterns using the __match_args__</span></span><br><span class="line">    <span class="keyword">case</span> Point(<span class="number">1</span>, y_value):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Matched! y=<span class="subst">&#123;y_value&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># Matched! y=2</span></span><br></pre></td></tr></table></figure>
+
+
+<h1 id="結語"><a href="#結語" class="headerlink" title="結語"></a>結語</h1><p>算是把 match statement 完整介紹了一遍，希望下篇別拖更 （￣︶￣）↗　<br>如果有任何問題，歡迎在下面留言。</p>
+<h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://docs.python.org/3/reference/compound_stmts.html#the-match-statement">https://docs.python.org/3/reference/compound_stmts.html#the-match-statement</a></li>
+<li><a target="_blank" rel="noopener" href="https://peps.python.org/pep-0636/">https://peps.python.org/pep-0636/</a></li>
+<li><a target="_blank" rel="noopener" href="https://peps.python.org/pep-0634/">https://peps.python.org/pep-0634/</a></li>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/46701063/why-doesnt-python-have-switch-case-update-match-case-syntax-was-added-to-pyt">https://stackoverflow.com/questions/46701063/why-doesnt-python-have-switch-case-update-match-case-syntax-was-added-to-pyt</a></li>
+</ul>
+<hr>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Python/">Python</a><a class="post-meta__tags" href="/tags/Python-3-10/">Python 3.10</a></div></div><nav class="pagination-post" id="pagination"></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://avatars.githubusercontent.com/u/120627599" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">夏乃凜</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">1</div></a><a href="/tags/"><div class="headline">標籤</div><div class="length-num">2</div></a><a href="/categories/"><div class="headline">分類</div><div class="length-num">1</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/vHrqO"><i class="fa-brands fa-github"></i><span>Follow Me</span></a></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目錄</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">2.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Guards"><span class="toc-number">3.</span> <span class="toc-text">Guards</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Irrefutable-Case-Blocks"><span class="toc-number">4.</span> <span class="toc-text">Irrefutable Case Blocks</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Patterns"><span class="toc-number">5.</span> <span class="toc-text">Patterns</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#OR-Patterns"><span class="toc-number">5.1.</span> <span class="toc-text">OR Patterns</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AS-Patterns"><span class="toc-number">5.2.</span> <span class="toc-text">AS Patterns</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Literal-Patterns"><span class="toc-number">5.3.</span> <span class="toc-text">Literal Patterns</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Capture-Patterns"><span class="toc-number">5.4.</span> <span class="toc-text">Capture Patterns</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Wildcard-Patterns"><span class="toc-number">5.5.</span> <span class="toc-text">Wildcard Patterns</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Value-Patterns"><span class="toc-number">5.6.</span> <span class="toc-text">Value Patterns</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Group-Patterns"><span class="toc-number">5.7.</span> <span class="toc-text">Group Patterns</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Sequence-Patterns"><span class="toc-number">5.8.</span> <span class="toc-text">Sequence Patterns</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mapping-Patterns"><span class="toc-number">5.9.</span> <span class="toc-text">Mapping Patterns</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Class-Patterns"><span class="toc-number">5.10.</span> <span class="toc-text">Class Patterns</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%B5%90%E8%AA%9E"><span class="toc-number">6.</span> <span class="toc-text">結語</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#References"><span class="toc-number">7.</span> <span class="toc-text">References</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/54dc861e6176/" title="Python 3.10 | Match Statement - 更靈活的 switch"><img src="https://images.unsplash.com/photo-1559622214-f8a9850965bb?q=80&amp;w=3294&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python 3.10 | Match Statement - 更靈活的 switch"/></a><div class="content"><a class="title" href="/posts/54dc861e6176/" title="Python 3.10 | Match Statement - 更靈活的 switch">Python 3.10 | Match Statement - 更靈活的 switch</a><time datetime="2025-03-04T16:00:00.000Z" title="發表於 2025-03-05 00:00:00">2025-03-05</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2024 - 2025 By 夏乃凜</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主題 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.4</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="閱讀模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日夜模式切換"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="單欄和雙欄切換"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="設定"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目錄"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到頂端"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
