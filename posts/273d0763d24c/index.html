@@ -1,0 +1,281 @@
+<!DOCTYPE html><html lang="zh-TW" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>所以，Git 是 ? | 再談 Git | Breeze。夏風與夢</title><meta name="author" content="夏乃凜"><meta name="copyright" content="夏乃凜"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="什麼是 Git？我們常聽到「要用 Git」、「要做版本控制」，那到底什麼是版本控制 (Version Control) 呢？   版本控制 (Version Control) 是什麼？白話說，版本控制系統 就是一種可以記錄檔案變更歷史的工具，讓我們隨時可以回到過去的某個版本，查看、還原或比較內容。    “What is “version control”, and why should you">
+<meta property="og:type" content="article">
+<meta property="og:title" content="所以，Git 是 ? | 再談 Git">
+<meta property="og:url" content="https://vhrqo.github.io/posts/273d0763d24c/index.html">
+<meta property="og:site_name" content="Breeze。夏風與夢">
+<meta property="og:description" content="什麼是 Git？我們常聽到「要用 Git」、「要做版本控制」，那到底什麼是版本控制 (Version Control) 呢？   版本控制 (Version Control) 是什麼？白話說，版本控制系統 就是一種可以記錄檔案變更歷史的工具，讓我們隨時可以回到過去的某個版本，查看、還原或比較內容。    “What is “version control”, and why should you">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://images.unsplash.com/photo-1565958011703-44f9829ba187?q=80&w=3622&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D">
+<meta property="article:published_time" content="2025-03-21T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-03-21T18:47:26.225Z">
+<meta property="article:author" content="夏乃凜">
+<meta property="article:tag" content="Git">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://images.unsplash.com/photo-1565958011703-44f9829ba187?q=80&w=3622&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "所以，Git 是 ? | 再談 Git",
+  "url": "https://vhrqo.github.io/posts/273d0763d24c/",
+  "image": "https://images.unsplash.com/photo-1565958011703-44f9829ba187?q=80&w=3622&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "datePublished": "2025-03-21T16:00:00.000Z",
+  "dateModified": "2025-03-21T18:47:26.225Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "夏乃凜",
+      "url": "https://vhrqo.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="https://avatars.githubusercontent.com/u/120627599"><link rel="canonical" href="https://vhrqo.github.io/posts/273d0763d24c/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const mediaQueryDark = window.matchMedia('(prefers-color-scheme: dark)')
+          const mediaQueryLight = window.matchMedia('(prefers-color-scheme: light)')
+
+          if (theme === undefined) {
+            if (mediaQueryLight.matches) activateLightMode()
+            else if (mediaQueryDark.matches) activateDarkMode()
+            else {
+              const hour = new Date().getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            mediaQueryDark.addEventListener('change', () => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else {
+            theme === 'light' ? activateLightMode() : activateDarkMode()
+          }
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '複製成功',
+    error: '複製失敗',
+    noSupport: '瀏覽器不支援'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '剛剛',
+    min: '分鐘前',
+    hour: '小時前',
+    day: '天前',
+    month: '個月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '載入更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: true,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '所以，Git 是 ? | 再談 Git',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom_css.css"><link rel="stylesheet" href="/css/custom_font.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://avatars.githubusercontent.com/u/120627599" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">標籤</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分類</div><div class="length-num">2</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa-solid fa-house"></i><span> 首頁</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa-solid fa-box-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa-solid fa-folder-open"></i><span> 分類</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa-solid fa-tags"></i><span> 標籤</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://images.unsplash.com/photo-1565958011703-44f9829ba187?q=80&amp;w=3622&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Breeze。夏風與夢</span></a><a class="nav-page-title" href="/"><span class="site-name">所以，Git 是 ? | 再談 Git</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa-solid fa-house"></i><span> 首頁</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa-solid fa-box-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa-solid fa-folder-open"></i><span> 分類</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa-solid fa-tags"></i><span> 標籤</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">所以，Git 是 ? | 再談 Git</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">發表於</span><time class="post-meta-date-created" datetime="2025-03-21T16:00:00.000Z" title="發表於 2025-03-22 00:00:00">2025-03-22</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新於</span><time class="post-meta-date-updated" datetime="2025-03-21T18:47:26.225Z" title="更新於 2025-03-22 02:47:26">2025-03-22</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%86%8D%E8%AB%87-Git/">再談 Git</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">總字數:</span><span class="word-count">419</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">閱讀時間:</span><span>1分鐘</span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="什麼是-Git？"><a href="#什麼是-Git？" class="headerlink" title="什麼是 Git？"></a>什麼是 Git？</h1><p>我們常聽到「要用 Git」、「要做版本控制」，那到底什麼是<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Version_control">版本控制 (Version Control)</a> 呢？  </p>
+<h1 id="版本控制-Version-Control-是什麼？"><a href="#版本控制-Version-Control-是什麼？" class="headerlink" title="版本控制 (Version Control) 是什麼？"></a>版本控制 (Version Control) 是什麼？</h1><p>白話說，<strong>版本控制系統</strong> 就是一種可以記錄檔案變更歷史的工具，讓我們隨時可以回到過去的某個版本，查看、還原或比較內容。  </p>
+<blockquote>
+<p>“What is “version control”, and why should you care? Version control is a system that records changes to a file or set of files over time so that you can recall specific versions later.”<br>—— <a target="_blank" rel="noopener" href="https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control">Pro Git</a>  </p>
+</blockquote>
+<h1 id="所以，為什麼要用-Git？"><a href="#所以，為什麼要用-Git？" class="headerlink" title="所以，為什麼要用 Git？"></a>所以，為什麼要用 Git？</h1><p>如果沒有版本控制，我們想要管理不同版本的檔案，比如：  </p>
+<ul>
+<li><code>file-0501.txt</code>  </li>
+<li><code>file-0507.txt</code></li>
+</ul>
+<p>這樣雖然可以區分版本，但你能一眼看出這兩個版本修改了什麼內容嗎？如果檔案越來越多，怎麼管理？不想用日期命名又該怎麼辦？最麻煩的是，當多人一起協作時，如果有衝突要怎麼解決？到底該用誰的版本？  </p>
+<p>這時候，<strong>版本控制系統</strong> 就能派上用場！它可以清楚記錄：  </p>
+<ul>
+<li><strong>誰</strong> 在 <strong>什麼時候</strong> 加入或修改了某個檔案  </li>
+<li>修改了 <strong>哪些內容</strong>  </li>
+<li>甚至可以<strong>還原舊版本</strong>，不用擔心誤刪或改錯</li>
+</ul>
+<p>所以，為什麼不要用 Git？ </p>
+<h1 id="為什麼要學-CLI？-GUI-不好嗎？"><a href="#為什麼要學-CLI？-GUI-不好嗎？" class="headerlink" title="為什麼要學 CLI？ GUI 不好嗎？"></a>為什麼要學 CLI？ GUI 不好嗎？</h1><p>其實，GUI 工具本質上就是把 Git 指令包裝，讓操作更方便，<br>但很容易會忽略内部原理，變成用完但什麼都不懂，<br>當然，GUI 的方便不可否認，但如果真的搞懂 Git，學 CLI 絕對是值得的</p>
+<h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://git-scm.com/book/en/v2/Getting-Started-What-is-Git%3F">https://git-scm.com/book/en/v2/Getting-Started-What-is-Git%3F</a></li>
+</ul>
+<blockquote>
+<p>Photo by <em>anna_tukhfatullina</em> on <a target="_blank" rel="noopener" href="https://unsplash.com/photos/raspberry-cake-Mzy-OjtCI70">Unsplash</a></p>
+</blockquote>
+<br />
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Git/">Git</a></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/4b592c5282a1/" title="Working directory(工作區), Staging area(暫存區), Git directory(儲存庫) | 再談 Git"><img class="cover" src="https://images.unsplash.com/photo-1594627882045-57465104050f?q=80&amp;w=3928&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Working directory(工作區), Staging area(暫存區), Git directory(儲存庫) | 再談 Git</div></div><div class="info-2"><div class="info-item-1">工作區、暫存區與儲存庫Git 大致可以分成三個區，分別是 Working Directory（工作區）、Staging Area（暫存區） 和 Git Directory（儲存庫），如下圖所示。 與其對應，在 Git 中，檔案可能處於以下狀態：  Working Directory Tracked : 檔案已被之前的 commit 存入儲存庫，在 Git 的管理範圍內。 Unmodified：檔案內容與最後一次 commit 相同，沒有變更。 Modified：檔案內容已更改，但尚未加入 Staging area。   Untracked : 其他不在 Repository ，也不在 Staging Area 的檔案，不在 Git 的管理範圍內。   Staging Area Staged：檔案已加入 Staging area，等待 commit。   Git Directory Committed：commit 已被提交並存入儲存庫。    Working Directory（工作區）Working Directory 可以視為 Git Directory（儲存庫）...</div></div></div></a><a class="pagination-related" href="/posts/54dc861e6176/" title="Python 3.10 | Match Statement - 更靈活的 switch"><img class="cover" src="https://images.unsplash.com/photo-1559622214-f8a9850965bb?q=80&amp;w=3294&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Python 3.10 | Match Statement - 更靈活的 switch</div></div><div class="info-2"><div class="info-item-1">概述在我當初開始學 Python 時，發現沒有 switch 可用，令我感到有些驚訝，還好從 Python 3.10 開始， Python 有了自己的 switch —— Structural Pattern Matching。 所以什麼是 Structural Pattern Matching ? 與 C++ 的 switch 相比，我覺得它更類似於 C# 的 Pattern Matching。舉個簡單的例子: 12345678910111213141516171819202122232425is_perform = Falsematch (&quot;anon&quot;, &quot;soyorin&quot;):    # Mismatch    case &#x27;tomorin&#x27;:        print(&#x27;組一輩子樂團&#x27;)    # Mismatch: soyorin != rana    case (&quot;anon&quot;, &quot;rana&quot;):       ...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相關推薦</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/4b592c5282a1/" title="Working directory(工作區), Staging area(暫存區), Git directory(儲存庫) | 再談 Git"><img class="cover" src="https://images.unsplash.com/photo-1594627882045-57465104050f?q=80&w=3928&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-23</div><div class="info-item-2">Working directory(工作區), Staging area(暫存區), Git directory(儲存庫) | 再談 Git</div></div><div class="info-2"><div class="info-item-1">工作區、暫存區與儲存庫Git 大致可以分成三個區，分別是 Working Directory（工作區）、Staging Area（暫存區） 和 Git Directory（儲存庫），如下圖所示。 與其對應，在 Git 中，檔案可能處於以下狀態：  Working Directory Tracked : 檔案已被之前的 commit 存入儲存庫，在 Git 的管理範圍內。 Unmodified：檔案內容與最後一次 commit 相同，沒有變更。 Modified：檔案內容已更改，但尚未加入 Staging area。   Untracked : 其他不在 Repository ，也不在 Staging Area 的檔案，不在 Git 的管理範圍內。   Staging Area Staged：檔案已加入 Staging area，等待 commit。   Git Directory Committed：commit 已被提交並存入儲存庫。    Working Directory（工作區）Working Directory 可以視為 Git Directory（儲存庫）...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 評論</span></div></div><div class="comment-wrap"><div><div id="giscus-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://avatars.githubusercontent.com/u/120627599" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">夏乃凜</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">標籤</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分類</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/vHrqO"><i class="fa-brands fa-github"></i><span>Follow Me</span></a></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目錄</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%80%E9%BA%BC%E6%98%AF-Git%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">什麼是 Git？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6-Version-Control-%E6%98%AF%E4%BB%80%E9%BA%BC%EF%BC%9F"><span class="toc-number">2.</span> <span class="toc-text">版本控制 (Version Control) 是什麼？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%89%80%E4%BB%A5%EF%BC%8C%E7%82%BA%E4%BB%80%E9%BA%BC%E8%A6%81%E7%94%A8-Git%EF%BC%9F"><span class="toc-number">3.</span> <span class="toc-text">所以，為什麼要用 Git？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%82%BA%E4%BB%80%E9%BA%BC%E8%A6%81%E5%AD%B8-CLI%EF%BC%9F-GUI-%E4%B8%8D%E5%A5%BD%E5%97%8E%EF%BC%9F"><span class="toc-number">4.</span> <span class="toc-text">為什麼要學 CLI？ GUI 不好嗎？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#References"><span class="toc-number">5.</span> <span class="toc-text">References</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/4b592c5282a1/" title="Working directory(工作區), Staging area(暫存區), Git directory(儲存庫) | 再談 Git"><img src="https://images.unsplash.com/photo-1594627882045-57465104050f?q=80&amp;w=3928&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Working directory(工作區), Staging area(暫存區), Git directory(儲存庫) | 再談 Git"/></a><div class="content"><a class="title" href="/posts/4b592c5282a1/" title="Working directory(工作區), Staging area(暫存區), Git directory(儲存庫) | 再談 Git">Working directory(工作區), Staging area(暫存區), Git directory(儲存庫) | 再談 Git</a><time datetime="2025-03-22T16:00:00.000Z" title="發表於 2025-03-23 00:00:00">2025-03-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/273d0763d24c/" title="所以，Git 是 ? | 再談 Git"><img src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?q=80&amp;w=3622&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="所以，Git 是 ? | 再談 Git"/></a><div class="content"><a class="title" href="/posts/273d0763d24c/" title="所以，Git 是 ? | 再談 Git">所以，Git 是 ? | 再談 Git</a><time datetime="2025-03-21T16:00:00.000Z" title="發表於 2025-03-22 00:00:00">2025-03-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/54dc861e6176/" title="Python 3.10 | Match Statement - 更靈活的 switch"><img src="https://images.unsplash.com/photo-1559622214-f8a9850965bb?q=80&amp;w=3294&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python 3.10 | Match Statement - 更靈活的 switch"/></a><div class="content"><a class="title" href="/posts/54dc861e6176/" title="Python 3.10 | Match Statement - 更靈活的 switch">Python 3.10 | Match Statement - 更靈活的 switch</a><time datetime="2025-03-04T16:00:00.000Z" title="發表於 2025-03-05 00:00:00">2025-03-05</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2024 - 2025 By 夏乃凜</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主題 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.4</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="閱讀模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日夜模式切換"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="單欄和雙欄切換"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="設定"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目錄"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往評論"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到頂端"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getGiscusTheme = theme => theme === 'dark' ? 'dark' : 'light'
+
+  const createScriptElement = config => {
+    const ele = document.createElement('script')
+    Object.entries(config).forEach(([key, value]) => {
+      ele.setAttribute(key, value)
+    })
+    return ele
+  }
+
+  const loadGiscus = (el = document, key) => {
+    const mappingConfig = isShuoshuo
+      ? { 'data-mapping': 'specific', 'data-term': key }
+      : { 'data-mapping': (option && option['data-mapping']) || 'pathname' }
+
+    const giscusConfig = {
+      src: 'https://giscus.app/client.js',
+      'data-repo': 'vHrqO/blog',
+      'data-repo-id': 'R_kgDON4-c-A',
+      'data-category-id': 'DIC_kwDON4-c-M4Cnn3z',
+      'data-theme': getGiscusTheme(document.documentElement.getAttribute('data-theme')),
+      'data-reactions-enabled': '1',
+      crossorigin: 'anonymous',
+      async: true,
+      ...option,
+      ...mappingConfig
+    }
+
+    const scriptElement = createScriptElement(giscusConfig)
+
+    el.querySelector('#giscus-wrap').appendChild(scriptElement)
+
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyGiscus = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+  }
+
+  const changeGiscusTheme = theme => {
+    const iframe = document.querySelector('#giscus-wrap iframe')
+    if (iframe) {
+      const message = {
+        giscus: {
+          setConfig: {
+            theme: getGiscusTheme(theme)
+          }
+        }
+      }
+      iframe.contentWindow.postMessage(message, 'https://giscus.app')
+    }
+  }
+
+  btf.addGlobalFn('themeChange', changeGiscusTheme, 'giscus')
+
+  if (isShuoshuo) {
+    'Giscus' === 'Giscus'
+      ? window.shuoshuoComment = { loadComment: loadGiscus }
+      : window.loadOtherComment = loadGiscus
+    return
+  }
+
+  if ('Giscus' === 'Giscus' || !false) {
+    if (false) btf.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
+    else loadGiscus()
+  } else {
+    window.loadOtherComment = loadGiscus
+  }
+})()</script></div></div></body></html>
